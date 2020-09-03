@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="js/socket.io.js"></script>
+    <title>Document</title>
+</head>
+<body>
+   <input type="text" id="msg">
+   <button id="send">Send</button>
+   <hr>
+
+   <ul id="msgList">
+
+   </ul>
+    <script>
+        let userId = prompt('ID')
+        const socket = io()
+        const msg = document.getElementById('msg');
+        const send = document.getElementById('send')
+        const msgList = document.getElementById('msgList');
+
+        socket.on('SavanaPoint', () => {
+            console.log('Your are!')
+        })
+        socket.emit('onSetUser', userId)
+
+        socket.on('onI', () => {
+            userId = prompt('please enter valid user')
+        })
+        
+        socket.on('onClientMsg', ({user, msg}) => {
+           msgList.innerHTML += `<li>${user}: ${msg}</li>`
+           console.log(msg)
+        })
+
+        send.onclick = function() {
+            socket.emit('onClientMsg', {user: userId, msg:  msg.value})
+            msg.value = ''
+        }
+    </script>
+</body>
+</html>
